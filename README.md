@@ -1,10 +1,17 @@
 ```
-git clone https://github.com/alphacep/openfst.git
+# extract TO_PHONEMIC
+farextract automator_phonemic.far
 
+# clone openfst
+git clone https://github.com/alphacep/openfst.git
 cd openfst
+
+# build openfst with Emscripten
 autoreconf -i
 emconfigure ./configure --enable-bin=no --enable-grm --enable-static --disable-shared --host none
 emmake make -j
+
+# build
 em++ -std=c++17 -Wall -lfst -Lopenfst/src/lib/.libs -Iopenfst/src/include \
 	--bind -O3 -g1 \
   -s WASM=1 \
