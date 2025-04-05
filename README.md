@@ -1,4 +1,4 @@
-```
+```shell
 # extract TO_PHONEMIC
 farextract automator_phonemic.far
 
