@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khmer Automator Phonemic</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <style>
+    #output {
+      font-size: 2rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" style="margin-top: 2rem;">
+    <h1>Khmer Automator Phonemic</h1>
+    <p>Type Native Khmer word:</p>
+    <input type="text" placeholder="text" id="text" disabled>
+    <p id="output"></p>
+  </div>
+
+  <script type="module">
+    const _module = await import("/processor.js");
+    const mod = await _module.default();
+    const res = await fetch("/TO_PHONEMIC");
+    let buffer = await res.arrayBuffer();
+    buffer = new Uint8Array(buffer);
+    mod.FS.writeFile("TO_PHONEMIC", buffer);
+    const proc = new mod.Processor("TO_PHONEMIC");
+    text.disabled = false;
+
+    text.addEventListener("input", e => {
+      const t = e.target.value;
+
+      if (!t) {
+        output.innerText = "";
+        return;
+      }
+
+      try {
+        const out = proc.Verbalize(t)
+        output.innerText = out ? out : "Error!";
+      } catch (e) {
+        output.innerText = "Error!";
+      }
+    })
+
+  </script>
+</body>
+
+</html>
